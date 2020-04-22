@@ -11,6 +11,11 @@ Start up environment:
 
 - `docker-compose up`
 
+Run migrations:
+
+- Run all .sql files in src/db/migrations/
+- // TODO make migrations script
+
 Run Tests:
 
 - `npm run test`
