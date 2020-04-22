@@ -1,18 +1,18 @@
-export type Failable = {
+export interface Failable<T> {
   isError: boolean;
-  data: any;
-};
+  data: T;
+}
 
-export const isError = (failable: Failable) => failable.isError;
+export const isError = <T>(failable: Failable<T>) => failable.isError;
 
-export const isSuccess = (failable: Failable) => !failable.isError;
+export const isSuccess = <T>(failable: Failable<T>) => !failable.isError;
 
-export const success = (data: any): Failable => ({
+export const success = <T>(data: T): Failable<T> => ({
   isError: false,
   data,
 });
 
-export const failure = (data: any) => ({
+export const failure = <T>(data: T): Failable<T> => ({
   data,
   isError: true,
 });

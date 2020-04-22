@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { User } from '../models/user.model';
+import { User } from '../models/user/user.model';
 import { postgresConnection as conn } from '../db/connections';
 import { makeUpdateStatement } from '../util/sql-helpers';
 import { userSamples } from '../test/samples/user.sample';
