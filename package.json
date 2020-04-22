@@ -15,7 +15,7 @@
     "xpretest": "npm run compile",
     "xposttest": "npm run check"
   },
-  "author": "Jake McBride && ",
+  "author": "Jake McBride && Davis Kimoto",
   "license": "ISC",
   "dependencies": {
     "@hapi/joi": "^17.1.1",
