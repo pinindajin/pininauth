@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+  pinin-postgresql:
+    image: 'bitnami/postgresql:latest'
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./docker/var/lib/postgres:/var/lib/postgres
+    environment:
+      - POSTGRESQL_USERNAME=${PININ_POSTGRESQL_USERNAME}
+      - POSTGRESQL_PASSWORD=${PININ_POSTGRESQL_PASSWORD}
+      - POSTGRESQL_DATABASE=${PININ_POSTGRESQL_DATABASE}

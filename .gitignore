@@ -1,0 +1,7 @@
+/node_modules
+/build
+/dist
+/docker
+node_modules
+dist
+build
