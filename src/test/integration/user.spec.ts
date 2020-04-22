@@ -55,6 +55,14 @@ describe('@User INTEGRATION', () => {
       expect(result.body.email).toEqual(user.email);
       done();
     });
+
+    it('it should return 404 if no user is found', async done => {
+      const result = await request(server.callback()).get(
+        `/api/users/baduserid`
+      );
+      expect(result.status).toEqual(404);
+      done();
+    });
   });
 
   describe('PATCH /', () => {
