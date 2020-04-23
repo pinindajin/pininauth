@@ -1,10 +1,10 @@
 import request from 'supertest';
-import { server } from '../../server';
-import { addUser } from '../../repository/user.repo';
-import { userSamples } from '../samples/user.sample';
-import { NewUserDTO } from '../../models/user/new-user.dto';
-import { postgresConnection as conn } from '../../db/connections';
-import { UpdateUserDTO } from '../../models/user/update-user.dto';
+import { server } from '../../../server';
+import { addUser } from '../../../repository/user.repo';
+import { userSamples } from '../../samples/user.sample';
+import { NewUserDTO } from '../../../models/user/new-user.dto';
+import { postgresConnection as conn } from '../../../db/connections';
+import { UpdateUserDTO } from '../../../models/user/update-user.dto';
 
 const loadTestData = async () => {
   await userSamples.forEach(user => {
@@ -16,7 +16,7 @@ const truncateUsers = async () => {
   await conn.none(`TRUNCATE TABLE public.users`);
 };
 
-describe('@User INTEGRATION', () => {
+describe('INT:API @User', () => {
   // afterAll(() => server.close());
 
   beforeAll(async () => {
@@ -25,7 +25,7 @@ describe('@User INTEGRATION', () => {
   });
 
   describe('GET /', () => {
-    it('it should return the all users', async done => {
+    it('it should return the all users', async () => {
       const result = await request(server.callback()).get('/api/users');
       expect(result.status).toEqual(200);
       const [xena, pippa, deka] = userSamples;
@@ -40,33 +40,29 @@ describe('@User INTEGRATION', () => {
           expect(user.firstName).toEqual(deka.firstName);
         }
       });
-
-      done();
     });
   });
 
   describe('GET /:userId', () => {
-    it('it should return the correct user', async done => {
+    it('it should return the correct user', async () => {
       const user = userSamples[1];
       const result = await request(server.callback()).get(
         `/api/users/${user.id}`
       );
       expect(result.status).toEqual(200);
       expect(result.body.email).toEqual(user.email);
-      done();
     });
 
-    it('it should return 404 if no user is found', async done => {
+    it('it should return 404 if no user is found', async () => {
       const result = await request(server.callback()).get(
         `/api/users/baduserid`
       );
       expect(result.status).toEqual(404);
-      done();
     });
   });
 
   describe('PATCH /', () => {
-    it('it should update the user', async done => {
+    it('it should update the user', async () => {
       const newName = 'new-name';
       const newPassword = 'new-password';
       const userId = userSamples[2].id;
@@ -90,11 +86,9 @@ describe('@User INTEGRATION', () => {
       );
       expect(getRes.status).toEqual(200);
       expect(getRes.body.firstName).toEqual(newName);
-
-      done();
     });
 
-    it('should return a 400 if an invalid update user object is sent', async done => {
+    it('should return a 400 if an invalid update user object is sent', async () => {
       const userId = userSamples[2].id;
 
       const user = {
@@ -108,11 +102,9 @@ describe('@User INTEGRATION', () => {
         .set('Content-Type', 'application/json');
 
       expect(updateRes.status).toEqual(400);
-
-      done();
     });
 
-    it('should return a 404 if user is not found', async done => {
+    it('should return a 404 if user is not found', async () => {
       const user = {
         id: 'notfounduserid',
         firstName: 'something',
@@ -124,13 +116,11 @@ describe('@User INTEGRATION', () => {
         .set('Content-Type', 'application/json');
 
       expect(updateRes.status).toEqual(404);
-
-      done();
     });
   });
 
   describe('POST /', () => {
-    it('it should add a user', async done => {
+    it('it should add a user', async () => {
       const newUser: NewUserDTO = {
         firstName: 'mittens',
         email: 'mittens@gmail.com',
@@ -147,11 +137,9 @@ describe('@User INTEGRATION', () => {
         .set('Content-Type', 'application/json');
 
       expect(response.status).toEqual(201);
-
-      done();
     });
 
-    it('it should return a 409 when creating a duplicate user', async done => {
+    it('it should return a 409 when creating a duplicate user', async () => {
       const newUser: NewUserDTO = {
         firstName: 'davis',
         email: 'davis@gmail.com',
@@ -177,11 +165,9 @@ describe('@User INTEGRATION', () => {
         .set('Content-Type', 'application/json');
 
       expect(response.status).toEqual(409);
-
-      done();
     });
 
-    it('should return a 400 if an invalid new user object is sent', async done => {
+    it('should return a 400 if an invalid new user object is sent', async () => {
       const newUser = {
         bumbleBug: 'wisherwash',
         bull: 'spit',
@@ -198,8 +184,6 @@ describe('@User INTEGRATION', () => {
         .set('Content-Type', 'application/json');
 
       expect(response.status).toEqual(400);
-
-      done();
     });
   });
 });

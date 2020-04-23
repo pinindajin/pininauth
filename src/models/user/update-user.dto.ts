@@ -1,6 +1,13 @@
 import joi, { ValidationError } from '@hapi/joi';
 import { Failable, failure, success } from '../../util/failable';
 
+export type UpdateUser = {
+  id: string;
+  firstName?: string;
+  lastName?: string;
+  passwordHash: string;
+};
+
 export type UpdateUserDTO = {
   id: string;
   firstName?: string;

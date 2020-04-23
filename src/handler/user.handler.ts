@@ -15,6 +15,7 @@ import {
   UpdateUserDTO,
   validateUpdateUserDTO,
 } from '../models/user/update-user.dto';
+import { toUpdateUser } from '../util/user';
 
 const getOneUserHandler = async (ctx: RouterContext) => {
   const userId: string = ctx.params.userId;
@@ -35,7 +36,7 @@ const getAllUsersHandler = async (ctx: RouterContext) => {
 };
 
 const updateUserHandler = async (ctx: RouterContext) => {
-  const newUserData: UpdateUserDTO = ctx.request.body;
+  const newUserData = ctx.request.body;
   const validateResult = validateUpdateUserDTO(newUserData);
 
   if (isError(validateResult)) {
@@ -43,23 +44,17 @@ const updateUserHandler = async (ctx: RouterContext) => {
     return;
   }
 
-  // might be a more functional way to handle conditional property initialization
-  let userToUpdate: any = { id: newUserData.id };
-  if (newUserData.firstName) userToUpdate.firstName = newUserData.firstName;
-  if (newUserData.lastName) userToUpdate.lastName = newUserData.lastName;
-  if (newUserData.password) {
-    userToUpdate.passwordHash = await argon2.hash(newUserData.password);
-  }
-
+  const userToUpdate = await toUpdateUser(newUserData);
   const updatedUser = await updateUser(userToUpdate);
+
   if (!updatedUser) {
     ctx.response.status = 404;
     ctx.response.message = `Cannot find user ${userToUpdate.id}`;
     return;
   }
-  delete updatedUser.passwordHash;
+
   ctx.response.status = 200;
-  ctx.response.body = updatedUser;
+  ctx.response.body = { ...updatedUser, passwordHash: '<SENSITIVE>' };
 };
 
 const createUserHandler = async (ctx: RouterContext) => {

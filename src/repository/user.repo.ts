@@ -1,8 +1,8 @@
-import { v4 as uuid } from 'uuid';
 import { User } from '../models/user/user.model';
 import { postgresConnection as conn } from '../db/connections';
 import { makeUpdateStatement } from '../util/sql-helpers';
 import { userSamples } from '../test/samples/user.sample';
+import { UpdateUser } from '../models/user/update-user.dto';
 
 const testUsers: User[] = [...userSamples];
 
@@ -29,7 +29,7 @@ const getAllUsers = async () => {
   return users;
 };
 
-const updateUser = async (user: User) => {
+const updateUser = async (user: UpdateUser): Promise<User> => {
   const updatedUser = await conn.oneOrNone(
     `${makeUpdateStatement(user, null, 'users')} WHERE id = $/id/ RETURNING *`,
     user
