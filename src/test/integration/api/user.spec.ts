@@ -3,7 +3,7 @@ import { server } from '../../../server';
 import { addUser } from '../../../repository/user.repo';
 import { userSamples } from '../../samples/user.sample';
 import { NewUserDTO } from '../../../models/user/new-user.dto';
-// import { postgresConnection as conn } from '../../../db/connections';
+import { insertUserAndGetJWT } from '../../util';
 import { UpdateUserDTO } from '../../../models/user/update-user.dto';
 
 const loadTestData = async () => {
@@ -14,14 +14,18 @@ const loadTestData = async () => {
 
 describe('INT:API @User', () => {
   // afterAll(() => server.close());
+  let jwtToken: string;
 
   beforeAll(async () => {
     await loadTestData();
+    jwtToken = await insertUserAndGetJWT();
   });
 
   describe('GET /', () => {
     it('it should return the all users', async () => {
-      const result = await request(server.callback()).get('/api/users');
+      const result = await request(server.callback())
+        .get('/api/users')
+        .set('Authorization', `Bearer ${jwtToken}`);
       expect(result.status).toEqual(200);
       const [xena, pippa, deka] = userSamples;
       result.body.find((user: any) => {
@@ -41,17 +45,17 @@ describe('INT:API @User', () => {
   describe('GET /:userId', () => {
     it('it should return the correct user', async () => {
       const user = userSamples[1];
-      const result = await request(server.callback()).get(
-        `/api/users/${user.id}`
-      );
+      const result = await request(server.callback())
+        .get(`/api/users/${user.id}`)
+        .set('Authorization', `Bearer ${jwtToken}`);
       expect(result.status).toEqual(200);
       expect(result.body.email).toEqual(user.email);
     });
 
     it('it should return 404 if no user is found', async () => {
-      const result = await request(server.callback()).get(
-        `/api/users/baduserid`
-      );
+      const result = await request(server.callback())
+        .get(`/api/users/baduserid`)
+        .set('Authorization', `Bearer ${jwtToken}`);
       expect(result.status).toEqual(404);
     });
   });
@@ -71,14 +75,15 @@ describe('INT:API @User', () => {
       const updateRes = await request(server.callback())
         .patch(`/api/users`)
         .send(JSON.stringify(updatedUser))
-        .set('Content-Type', 'application/json');
+        .set('Content-Type', 'application/json')
+        .set('Authorization', `Bearer ${jwtToken}`);
 
       expect(updateRes.status).toEqual(200);
       expect(updateRes.body.firstName).toEqual(updatedUser.firstName);
 
-      const getRes = await request(server.callback()).get(
-        `/api/users/${updatedUser.id}`
-      );
+      const getRes = await request(server.callback())
+        .get(`/api/users/${updatedUser.id}`)
+        .set('Authorization', `Bearer ${jwtToken}`);
       expect(getRes.status).toEqual(200);
       expect(getRes.body.firstName).toEqual(newName);
     });
@@ -94,7 +99,8 @@ describe('INT:API @User', () => {
       const updateRes = await request(server.callback())
         .patch(`/api/users`)
         .send(JSON.stringify(user))
-        .set('Content-Type', 'application/json');
+        .set('Content-Type', 'application/json')
+        .set('Authorization', `Bearer ${jwtToken}`);
 
       expect(updateRes.status).toEqual(400);
     });
@@ -108,7 +114,8 @@ describe('INT:API @User', () => {
       const updateRes = await request(server.callback())
         .patch(`/api/users`)
         .send(JSON.stringify(user))
-        .set('Content-Type', 'application/json');
+        .set('Content-Type', 'application/json')
+        .set('Authorization', `Bearer ${jwtToken}`);
 
       expect(updateRes.status).toEqual(404);
     });
@@ -129,7 +136,8 @@ describe('INT:API @User', () => {
             user: newUser,
           })
         )
-        .set('Content-Type', 'application/json');
+        .set('Content-Type', 'application/json')
+        .set('Authorization', `Bearer ${jwtToken}`);
 
       expect(response.status).toEqual(201);
     });
@@ -148,7 +156,8 @@ describe('INT:API @User', () => {
             user: newUser,
           })
         )
-        .set('Content-Type', 'application/json');
+        .set('Content-Type', 'application/json')
+        .set('Authorization', `Bearer ${jwtToken}`);
 
       const response = await request(server.callback())
         .post('/api/users')
@@ -157,7 +166,8 @@ describe('INT:API @User', () => {
             user: newUser,
           })
         )
-        .set('Content-Type', 'application/json');
+        .set('Content-Type', 'application/json')
+        .set('Authorization', `Bearer ${jwtToken}`);
 
       expect(response.status).toEqual(409);
     });
@@ -176,7 +186,8 @@ describe('INT:API @User', () => {
             user: newUser,
           })
         )
-        .set('Content-Type', 'application/json');
+        .set('Content-Type', 'application/json')
+        .set('Authorization', `Bearer ${jwtToken}`);
 
       expect(response.status).toEqual(400);
     });

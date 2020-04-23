@@ -9,9 +9,9 @@ import { jwtMiddleware } from '../middleware/jwt-middleware';
 
 const userRouter = new Router({ prefix: '/api/users' });
 
-userRouter.get('/', getAllUsersHandler);
-userRouter.get('/:userId', getOneUserHandler);
-userRouter.patch('/', updateUserHandler);
-userRouter.post('/', createUserHandler);
+userRouter.get('/', jwtMiddleware, getAllUsersHandler);
+userRouter.get('/:userId', jwtMiddleware, getOneUserHandler);
+userRouter.patch('/', jwtMiddleware, updateUserHandler);
+userRouter.post('/', jwtMiddleware, createUserHandler);
 
 export { userRouter };
