@@ -1,4 +1,5 @@
-import { db } from '../config';
+import config from '../config';
+const { db } = config;
 import { logInfo } from '../util/logger';
 import pgPromise from 'pg-promise';
 import { camelize } from 'humps';

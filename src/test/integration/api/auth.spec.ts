@@ -4,27 +4,34 @@ import { addUser } from '../../../repository/user.repo';
 import { v4 as uuid } from 'uuid';
 import argon2 from 'argon2';
 
-xdescribe('INT:API @Auth', () => {
-  describe('POST /login', async () => {
-    const testUser = beforeAll(async () => {
-      const passwordHash = await argon2.hash('yoloplainpass');
-      await addUser({
+describe('INT:API @Auth', () => {
+  describe('POST /login', () => {
+    const testUserPass = 'yoloplainpass';
+    let testUser: any;
+
+    beforeAll(async () => {
+      testUser = {
         id: uuid(),
         email: 'yolouser@yolo.com',
-        passwordHash,
-      });
+        firstName: 'uno',
+        lastName: 'dos',
+        passwordHash: await argon2.hash(testUserPass),
+      };
+      await addUser(testUser);
     });
 
     it('should return a jwt token for valid user creds', async () => {
+      const loginUser = {
+        email: testUser.email,
+        password: testUserPass,
+      };
       const response = await request(server.callback())
-        .post('/api/users')
-        .send(
-          JSON.stringify({
-            email: '',
-            password: '',
-          })
-        )
+        .post('/auth/login')
+        .send(JSON.stringify({ user: loginUser }))
         .set('Content-Type', 'application/json');
+
+      expect(response.status).toBe(200);
+      expect(response.body.token).toBeDefined();
     });
   });
 });
