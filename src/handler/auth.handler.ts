@@ -15,9 +15,7 @@ const loginHandler = async (ctx: RouterContext) => {
     return;
   }
 
-  console.log('🐸 loginUser', user);
   const userRecord = await getUserByEmail(user.email);
-  console.log('🦊 user', userRecord);
 
   if (!userRecord) {
     ctx.response.status = 404;
