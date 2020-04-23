@@ -3,7 +3,7 @@ import { server } from '../../../server';
 import { addUser } from '../../../repository/user.repo';
 import { userSamples } from '../../samples/user.sample';
 import { NewUserDTO } from '../../../models/user/new-user.dto';
-import { postgresConnection as conn } from '../../../db/connections';
+// import { postgresConnection as conn } from '../../../db/connections';
 import { UpdateUserDTO } from '../../../models/user/update-user.dto';
 
 const loadTestData = async () => {
@@ -12,15 +12,10 @@ const loadTestData = async () => {
   });
 };
 
-const truncateUsers = async () => {
-  await conn.none(`TRUNCATE TABLE public.users`);
-};
-
 describe('INT:API @User', () => {
   // afterAll(() => server.close());
 
   beforeAll(async () => {
-    await truncateUsers();
     await loadTestData();
   });
 
