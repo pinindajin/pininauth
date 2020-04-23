@@ -5,6 +5,7 @@ import {
   getOneUserHandler,
   updateUserHandler,
 } from '../handler/user.handler';
+import { jwtMiddleware } from '../middleware/jwt-middleware';
 
 const userRouter = new Router({ prefix: '/api/users' });
 
