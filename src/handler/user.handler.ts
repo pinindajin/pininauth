@@ -7,7 +7,7 @@ import {
   updateUser,
 } from '../repository/user.repo';
 import { User } from '../models/user/user.model';
-import { isError } from '../util/failable';
+import { isError } from '../common/failable';
 import argon2 from 'argon2';
 import { NewUserDTO, validateNewUserDTO } from '../models/user/new-user.dto';
 import { v4 as uuid } from 'uuid';
@@ -15,7 +15,9 @@ import {
   UpdateUserDTO,
   validateUpdateUserDTO,
 } from '../models/user/update-user.dto';
-import { toUpdateUser } from '../util/user';
+import { toUpdateUser } from '../common/user';
+import { BASIC_USER } from '../common/permissions/user';
+import { USER_ROLE } from '../common/permissions/role';
 
 const getOneUserHandler = async (ctx: RouterContext) => {
   const userId: string = ctx.params.userId;
@@ -79,6 +81,10 @@ const createUserHandler = async (ctx: RouterContext) => {
     email: user.email,
     firstName: user.firstName || '',
     lastName: user.lastName || '',
+    permissions: {
+      roleMask: USER_ROLE,
+      userMask: BASIC_USER,
+    },
   };
 
   await addUser(userToAdd);

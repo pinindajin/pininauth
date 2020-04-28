@@ -1,4 +1,4 @@
-import { toUpdateUser } from '../../util/user';
+import { toUpdateUser } from '../../common/user';
 import { UpdateUserDTO } from '../../models/user/update-user.dto';
 import argon2 from 'argon2';
 

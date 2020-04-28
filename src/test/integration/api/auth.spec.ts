@@ -3,6 +3,8 @@ import { server } from '../../../server';
 import { addUser } from '../../../repository/user.repo';
 import { v4 as uuid } from 'uuid';
 import argon2 from 'argon2';
+import { USER_ROLE } from '../../../common/permissions/role';
+import { BASIC_USER } from '../../../common/permissions/user';
 
 describe('INT:API @Auth', () => {
   describe('POST /login', () => {
@@ -16,6 +18,10 @@ describe('INT:API @Auth', () => {
         firstName: 'uno',
         lastName: 'dos',
         passwordHash: await argon2.hash(testUserPass),
+        permissions: {
+          roleMask: USER_ROLE,
+          userMask: BASIC_USER,
+        },
       };
       await addUser(testUser);
     });

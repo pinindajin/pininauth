@@ -1,5 +1,5 @@
 import joi, { ValidationError } from '@hapi/joi';
-import { Failable, failure, success } from '../../util/failable';
+import { Failable, failure, success } from '../../common/failable';
 
 export type UpdateUser = {
   id: string;

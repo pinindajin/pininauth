@@ -1,4 +1,11 @@
 import { User } from '../../models/user/user.model';
+import { USER_ROLE } from '../../common/permissions/role';
+import {
+  ADD_USER,
+  READ_ALL_USER,
+  READ_SELF_USER,
+  UPDATE_USER,
+} from '../../common/permissions/user';
 
 const userSamples: User[] = [
   {
@@ -7,6 +14,10 @@ const userSamples: User[] = [
     lastName: '',
     email: 'xena@gmail.com',
     passwordHash: 'xenapass',
+    permissions: {
+      roleMask: USER_ROLE,
+      userMask: ADD_USER | READ_ALL_USER | READ_SELF_USER | UPDATE_USER,
+    },
   },
   {
     id: '1b50043d-bec4-4610-b37d-cfa1fef04c56',
@@ -14,6 +25,10 @@ const userSamples: User[] = [
     lastName: '',
     email: 'pippa@gmail.com',
     passwordHash: 'pippapass',
+    permissions: {
+      roleMask: USER_ROLE,
+      userMask: ADD_USER | READ_ALL_USER | READ_SELF_USER | UPDATE_USER,
+    },
   },
   {
     id: 'ed2d8fcf-c1d4-4688-96ab-79ffe3664604',
@@ -21,6 +36,10 @@ const userSamples: User[] = [
     lastName: '',
     passwordHash: 'dekapass',
     email: 'deka@gmail.com',
+    permissions: {
+      roleMask: USER_ROLE,
+      userMask: ADD_USER | READ_ALL_USER | READ_SELF_USER | UPDATE_USER,
+    },
   },
 ];
 

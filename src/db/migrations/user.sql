@@ -8,7 +8,8 @@ CREATE TABLE users (
     first_name text,
     last_name text,
     password_hash text NOT NULL,
-    email text NOT NULL
+    email text NOT NULL,
+    permissions json NOT NULL
 );
 
 -- Indices -------------------------------------------------------

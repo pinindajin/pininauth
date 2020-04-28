@@ -1,5 +1,5 @@
 import joi, { ValidationError } from '@hapi/joi';
-import { Failable, success, failure } from '../../util/failable';
+import { Failable, success, failure } from '../../common/failable';
 
 export type LoginUserDTO = {
   email: string;

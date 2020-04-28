@@ -1,12 +1,14 @@
 import { RouterContext } from '@koa/router';
 import { LoginUserDTO, validateLoginUser } from '../models/user/login-user.dto';
 import { getUserByEmail } from '../repository/user.repo';
-import { isError } from '../util/failable';
+import { isError } from '../common/failable';
 import argon2 from 'argon2';
-import { getJwtFromUser } from '../util/jwt';
+import { getJwtFromUser } from '../common/jwt';
 
 const loginHandler = async (ctx: RouterContext) => {
+  console.log('🐤 loginHandler');
   const user: LoginUserDTO = ctx.request.body.user;
+  console.log('🐤 user', user);
 
   const validateResult = validateLoginUser(user);
 

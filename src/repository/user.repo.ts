@@ -1,6 +1,6 @@
 import { User } from '../models/user/user.model';
 import { postgresConnection as conn } from '../db/connections';
-import { makeUpdateStatement } from '../util/sql-helpers';
+import { makeUpdateStatement } from '../common/sql-helpers';
 import { userSamples } from '../test/samples/user.sample';
 import { UpdateUser } from '../models/user/update-user.dto';
 
@@ -38,19 +38,24 @@ const updateUser = async (user: UpdateUser): Promise<User> => {
 };
 
 const addUser = async (user: User) => {
+  const userToInsert = {
+    ...user,
+    permissions: JSON.stringify(user.permissions),
+  };
   const addedUser = await conn.one(
     `
-    INSERT INTO public.users (id, first_name, last_name, email, password_hash)
+    INSERT INTO public.users (id, first_name, last_name, email, password_hash, permissions)
     VALUES (
       $/id/,
       $/firstName/,
       $/lastName/,
       $/email/,
-      $/passwordHash/
+      $/passwordHash/,
+      $/permissions/
     )
     RETURNING *
   `,
-    user
+    userToInsert
   );
   return addedUser;
 };
