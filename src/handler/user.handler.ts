@@ -33,13 +33,6 @@ const getOneUserHandler = async (ctx: RouterContext) => {
 };
 
 const getAllUsersHandler = async (ctx: RouterContext) => {
-  const { user } = ctx.state;
-
-  if (!hasPermissions(READ_OTHER_USER, user.permissions.userMask)) {
-    ctx.response.status = 403;
-    return;
-  }
-
   const users = await getAllUsers();
   ctx.response.body = users;
   ctx.response.status = 200;

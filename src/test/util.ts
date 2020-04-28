@@ -11,6 +11,7 @@ import {
   READ_SELF_USER,
   UPDATE_USER,
 } from '../common/permissions/user';
+import faker from 'faker';
 
 export const truncateUsers = async () => {
   await conn.none(`TRUNCATE TABLE public.users`);
@@ -20,11 +21,11 @@ export const insertUserAndGetJWT = async (
   user: Partial<User> = {}
 ): Promise<string> => {
   const defaultUser = {
-    id: 'cc6b7dfc-99c8-4084-a976-510c077a1517',
-    email: 'defaulttest@gmail.com',
-    passwordHash: 'default-test-password-hash',
-    firstName: 'default-test-first-name',
-    lastName: 'default-test-last-name',
+    id: faker.random.uuid(),
+    email: faker.internet.email(),
+    passwordHash: faker.random.alphaNumeric(),
+    firstName: faker.name.firstName(),
+    lastName: faker.name.lastName(),
     permissions: {
       roleMask: USER_ROLE,
       userMask: ADD_USER | READ_OTHER_USER | READ_SELF_USER | UPDATE_USER,
