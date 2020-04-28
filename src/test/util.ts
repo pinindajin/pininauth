@@ -7,7 +7,7 @@ import { User } from '../models/user/user.model';
 import { USER_ROLE } from '../common/permissions/role';
 import {
   ADD_USER,
-  READ_ALL_USER,
+  READ_OTHER_USER,
   READ_SELF_USER,
   UPDATE_USER,
 } from '../common/permissions/user';
@@ -17,7 +17,9 @@ export const truncateUsers = async () => {
 };
 
 export const insertUserAndGetJWT = async (
-  user: User = {
+  user: Partial<User> = {}
+): Promise<string> => {
+  const defaultUser = {
     id: 'cc6b7dfc-99c8-4084-a976-510c077a1517',
     email: 'defaulttest@gmail.com',
     passwordHash: 'default-test-password-hash',
@@ -25,18 +27,19 @@ export const insertUserAndGetJWT = async (
     lastName: 'default-test-last-name',
     permissions: {
       roleMask: USER_ROLE,
-      userMask: ADD_USER | READ_ALL_USER | READ_SELF_USER | UPDATE_USER,
+      userMask: ADD_USER | READ_OTHER_USER | READ_SELF_USER | UPDATE_USER,
     },
-  }
-): Promise<string> => {
-  await addUser(user);
+  };
+  const newUser = Object.assign(defaultUser, user);
+
+  await addUser(newUser);
 
   const jwtUser: JWTUser = {
-    userId: user.id,
-    email: user.email,
+    userId: newUser.id,
+    email: newUser.email,
   };
 
-  const jwtToken = jwt.sign({ jwtUser }, config.jwt.secret, {
+  const jwtToken = jwt.sign({ ...jwtUser }, config.jwt.secret, {
     expiresIn: '1h',
   });
 

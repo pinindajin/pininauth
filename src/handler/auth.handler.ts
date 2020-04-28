@@ -6,9 +6,7 @@ import argon2 from 'argon2';
 import { getJwtFromUser } from '../common/jwt';
 
 const loginHandler = async (ctx: RouterContext) => {
-  console.log('🐤 loginHandler');
   const user: LoginUserDTO = ctx.request.body.user;
-  console.log('🐤 user', user);
 
   const validateResult = validateLoginUser(user);
 

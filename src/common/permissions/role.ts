@@ -4,4 +4,4 @@ export const USER_ROLE = 1;
 export type TUSER_ROLE = 1;
 export type TADMIN_ROLE = 2;
 
-export type TRoleMask = TUSER_ROLE | TADMIN_ROLE;
+export type TRoleMask = 0 | TUSER_ROLE | TADMIN_ROLE;

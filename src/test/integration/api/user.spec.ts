@@ -5,6 +5,8 @@ import { userSamples } from '../../samples/user.sample';
 import { NewUserDTO } from '../../../models/user/new-user.dto';
 import { insertUserAndGetJWT } from '../../util';
 import { UpdateUserDTO } from '../../../models/user/update-user.dto';
+import { USER_ROLE } from '../../../common/permissions/role';
+import { BASIC_USER, READ_OTHER_USER } from '../../../common/permissions/user';
 
 const loadTestData = async () => {
   await userSamples.forEach(user => {
@@ -22,10 +24,17 @@ describe('INT:API @User', () => {
   });
 
   describe('GET /', () => {
-    it('it should return the all users', async () => {
+    it('it should return all the users', async () => {
+      const getAllJwt = await insertUserAndGetJWT({
+        id: 'dad2fb3a-ef67-44ba-a4af-27072048b5ec',
+        permissions: {
+          roleMask: 0,
+          userMask: READ_OTHER_USER,
+        },
+      });
       const result = await request(server.callback())
         .get('/api/users')
-        .set('Authorization', `Bearer ${jwtToken}`);
+        .set('Authorization', `Bearer ${getAllJwt}`);
       expect(result.status).toEqual(200);
       const [xena, pippa, deka] = userSamples;
       result.body.find((user: any) => {
@@ -39,6 +48,20 @@ describe('INT:API @User', () => {
           expect(user.firstName).toEqual(deka.firstName);
         }
       });
+    });
+
+    it('should return a 403 if the user is not authorized', async () => {
+      const badToken = await insertUserAndGetJWT({
+        id: '61234e56-bc06-42a2-b627-61f0077ba08b',
+        permissions: {
+          roleMask: 0,
+          userMask: 0,
+        },
+      });
+      const result = await request(server.callback())
+        .get('/api/users')
+        .set('Authorization', `Bearer ${badToken}`);
+      expect(result.status).toEqual(403);
     });
   });
 

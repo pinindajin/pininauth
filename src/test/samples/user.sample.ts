@@ -2,7 +2,7 @@ import { User } from '../../models/user/user.model';
 import { USER_ROLE } from '../../common/permissions/role';
 import {
   ADD_USER,
-  READ_ALL_USER,
+  READ_OTHER_USER,
   READ_SELF_USER,
   UPDATE_USER,
 } from '../../common/permissions/user';
@@ -16,7 +16,7 @@ const userSamples: User[] = [
     passwordHash: 'xenapass',
     permissions: {
       roleMask: USER_ROLE,
-      userMask: ADD_USER | READ_ALL_USER | READ_SELF_USER | UPDATE_USER,
+      userMask: ADD_USER | READ_OTHER_USER | READ_SELF_USER | UPDATE_USER,
     },
   },
   {
@@ -27,7 +27,7 @@ const userSamples: User[] = [
     passwordHash: 'pippapass',
     permissions: {
       roleMask: USER_ROLE,
-      userMask: ADD_USER | READ_ALL_USER | READ_SELF_USER | UPDATE_USER,
+      userMask: ADD_USER | READ_OTHER_USER | READ_SELF_USER | UPDATE_USER,
     },
   },
   {
@@ -38,7 +38,7 @@ const userSamples: User[] = [
     email: 'deka@gmail.com',
     permissions: {
       roleMask: USER_ROLE,
-      userMask: ADD_USER | READ_ALL_USER | READ_SELF_USER | UPDATE_USER,
+      userMask: ADD_USER | READ_OTHER_USER | READ_SELF_USER | UPDATE_USER,
     },
   },
 ];

@@ -16,8 +16,9 @@ import {
   validateUpdateUserDTO,
 } from '../models/user/update-user.dto';
 import { toUpdateUser } from '../common/user';
-import { BASIC_USER } from '../common/permissions/user';
+import { BASIC_USER, READ_OTHER_USER } from '../common/permissions/user';
 import { USER_ROLE } from '../common/permissions/role';
+import { hasPermissions } from '../common/permissions/permissions';
 
 const getOneUserHandler = async (ctx: RouterContext) => {
   const userId: string = ctx.params.userId;
@@ -32,6 +33,13 @@ const getOneUserHandler = async (ctx: RouterContext) => {
 };
 
 const getAllUsersHandler = async (ctx: RouterContext) => {
+  const { user } = ctx.state;
+
+  if (!hasPermissions(READ_OTHER_USER, user.permissions.userMask)) {
+    ctx.response.status = 403;
+    return;
+  }
+
   const users = await getAllUsers();
   ctx.response.body = users;
   ctx.response.status = 200;

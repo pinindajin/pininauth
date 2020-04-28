@@ -10,5 +10,5 @@ export const getJwtFromUser = (user: User): string => {
     email: user.email,
   };
 
-  return jwt.sign({ jwtUser }, secret, { expiresIn: expiration });
+  return jwt.sign({ ...jwtUser }, secret, { expiresIn: expiration });
 };
