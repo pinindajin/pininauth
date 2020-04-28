@@ -16,7 +16,7 @@ import {
 
 const userRouter = new Router({ prefix: '/api/users' });
 
-const hasPermission = permissionMiddleware('userMask');
+const hasPermission = permissionMiddleware('USER');
 
 userRouter.get(
   '/',

@@ -2,14 +2,14 @@ import { RouterContext } from '@koa/router';
 import { Next } from 'koa';
 import {
   hasPermissions,
-  PERMISSIONS_PROPERTY,
+  PERMISSION_TYPE,
+  getPermissionMask,
 } from '../common/permissions/permissions';
 import { logInfo } from '../common/logger';
 
-// TODO XSHT - Find cleaner way to partially apply permissions middleware
-export const permissionMiddleware = (
-  permissionsMaskKey: PERMISSIONS_PROPERTY
-) => (requiredPermission: number) => async (ctx: RouterContext, next: Next) => {
+export const permissionMiddleware = (permissionType: PERMISSION_TYPE) => (
+  requiredPermission: number
+) => async (ctx: RouterContext, next: Next) => {
   const { user } = ctx.state;
 
   if (!user) {
@@ -29,7 +29,10 @@ export const permissionMiddleware = (
   }
 
   if (
-    !hasPermissions(requiredPermission, user.permissions[permissionsMaskKey])
+    !hasPermissions(
+      requiredPermission,
+      getPermissionMask(permissionType, user.permissions)
+    )
   ) {
     ctx.response.status = 403;
     return;
