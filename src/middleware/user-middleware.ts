@@ -12,7 +12,7 @@ export const userMiddleware = async (ctx: RouterContext, next: Next) => {
   }
 
   ctx.state.user = {
-    userId,
+    id: userId,
     ...user,
   };
 

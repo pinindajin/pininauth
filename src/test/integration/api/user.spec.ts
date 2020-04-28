@@ -3,7 +3,7 @@ import { server } from '../../../server';
 import { addUser } from '../../../repository/user.repo';
 import { userSamples } from '../../samples/user.sample';
 import { NewUserDTO } from '../../../models/user/new-user.dto';
-import { insertUserAndGetJWT } from '../../util';
+import { insertUserAndGetJWT, getFakeUser, getJwt } from '../../util';
 import { UpdateUserDTO } from '../../../models/user/update-user.dto';
 import { ALL_ROLES } from '../../../common/permissions/role';
 import {
@@ -11,7 +11,9 @@ import {
   ALL_USER,
   UPDATE_USER,
   ADD_USER,
+  READ_SELF_USER,
 } from '../../../common/permissions/user';
+import faker from 'faker';
 
 const loadTestData = async () => {
   await userSamples.forEach(user => {
@@ -37,6 +39,36 @@ describe('INT:API @User', () => {
         roleMask: 0,
         userMask: 0,
       },
+    });
+  });
+
+  describe('GET /self', () => {
+    it('should get self user', async () => {
+      const fakeUser = getFakeUser();
+      const jwt = await insertUserAndGetJWT(fakeUser);
+
+      const result = await request(server.callback())
+        .get('/api/users/self')
+        .set('Authorization', `Bearer ${jwt}`);
+      const user = result.body;
+
+      expect(result.status).toEqual(200);
+      expect(user).toEqual(fakeUser);
+    });
+
+    it('should return a 401 if self user is not found', async () => {
+      // 401 because you cannot get permission if you do not exist.
+      const badJwt = getJwt({
+        email: faker.internet.email(),
+        userId: faker.random.uuid(),
+      });
+
+      const result = await request(server.callback())
+        .get('/api/users/self')
+        .set('Authorization', `Bearer ${badJwt}`);
+      const user = result.body;
+
+      expect(result.status).toEqual(401);
     });
   });
 

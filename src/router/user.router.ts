@@ -4,6 +4,7 @@ import {
   getAllUsersHandler,
   getOneUserHandler,
   updateUserHandler,
+  getSelfUserHandler,
 } from '../handler/user.handler';
 import { jwtMiddleware } from '../middleware/jwt-middleware';
 import { userMiddleware } from '../middleware/user-middleware';
@@ -12,12 +13,20 @@ import {
   READ_OTHER_USER,
   UPDATE_USER,
   ADD_USER,
+  READ_SELF_USER,
 } from '../common/permissions/user';
 
 const userRouter = new Router({ prefix: '/api/users' });
 
 const permissionMiddleware = getPermissionMiddleware('USER');
 
+userRouter.get(
+  '/self',
+  jwtMiddleware,
+  userMiddleware,
+  permissionMiddleware(READ_SELF_USER),
+  getSelfUserHandler
+);
 userRouter.get(
   '/',
   jwtMiddleware,

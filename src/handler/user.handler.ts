@@ -16,9 +16,14 @@ import {
   validateUpdateUserDTO,
 } from '../models/user/update-user.dto';
 import { toUpdateUser } from '../common/user';
-import { BASIC_USER, READ_OTHER_USER } from '../common/permissions/user';
+import { BASIC_USER } from '../common/permissions/user';
 import { USER_ROLE } from '../common/permissions/role';
-import { hasPermissions } from '../common/permissions/permissions';
+import { logInfo } from '../common/logger';
+
+const getSelfUserHandler = async (ctx: RouterContext) => {
+  ctx.response.body = ctx.state.user;
+  ctx.response.status = 200;
+};
 
 const getOneUserHandler = async (ctx: RouterContext) => {
   const userId: string = ctx.params.userId;
@@ -98,4 +103,5 @@ export {
   createUserHandler,
   getAllUsersHandler,
   getOneUserHandler,
+  getSelfUserHandler,
 };

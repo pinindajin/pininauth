@@ -17,13 +17,36 @@ export const truncateUsers = async () => {
   await conn.none(`TRUNCATE TABLE public.users`);
 };
 
+export const getFakeUser = (user: Partial<User> = {}): User => {
+  const fakeUser = {
+    id: faker.random.uuid(),
+    email: faker.internet.email(),
+    passwordHash: faker.random.alphaNumeric(10),
+    firstName: faker.name.firstName(),
+    lastName: faker.name.lastName(),
+    permissions: {
+      roleMask: USER_ROLE,
+      userMask: ADD_USER | READ_OTHER_USER | READ_SELF_USER | UPDATE_USER,
+    },
+  };
+  return Object.assign(fakeUser, user);
+};
+
+export const getJwt = (jwtUser: JWTUser): string => {
+  const jwtToken = jwt.sign({ ...jwtUser }, config.jwt.secret, {
+    expiresIn: '1h',
+  });
+
+  return jwtToken;
+};
+
 export const insertUserAndGetJWT = async (
   user: Partial<User> = {}
 ): Promise<string> => {
   const defaultUser = {
     id: faker.random.uuid(),
     email: faker.internet.email(),
-    passwordHash: faker.random.alphaNumeric(),
+    passwordHash: faker.random.alphaNumeric(10),
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
     permissions: {
