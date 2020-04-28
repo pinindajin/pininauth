@@ -7,7 +7,7 @@ import {
 } from '../common/permissions/permissions';
 import { logInfo } from '../common/logger';
 
-export const permissionMiddleware = (permissionType: PERMISSION_TYPE) => (
+export const getPermissionMiddleware = (permissionType: PERMISSION_TYPE) => (
   requiredPermission: number
 ) => async (ctx: RouterContext, next: Next) => {
   const { user } = ctx.state;

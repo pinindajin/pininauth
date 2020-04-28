@@ -7,7 +7,7 @@ import {
 } from '../handler/user.handler';
 import { jwtMiddleware } from '../middleware/jwt-middleware';
 import { userMiddleware } from '../middleware/user-middleware';
-import { permissionMiddleware } from '../middleware/permission-middleware';
+import { getPermissionMiddleware } from '../middleware/permission-middleware';
 import {
   READ_OTHER_USER,
   UPDATE_USER,
@@ -16,34 +16,34 @@ import {
 
 const userRouter = new Router({ prefix: '/api/users' });
 
-const hasPermission = permissionMiddleware('USER');
+const permissionMiddleware = getPermissionMiddleware('USER');
 
 userRouter.get(
   '/',
   jwtMiddleware,
   userMiddleware,
-  hasPermission(READ_OTHER_USER),
+  permissionMiddleware(READ_OTHER_USER),
   getAllUsersHandler
 );
 userRouter.get(
   '/:userId',
   jwtMiddleware,
   userMiddleware,
-  hasPermission(READ_OTHER_USER),
+  permissionMiddleware(READ_OTHER_USER),
   getOneUserHandler
 );
 userRouter.patch(
   '/',
   jwtMiddleware,
   userMiddleware,
-  hasPermission(UPDATE_USER),
+  permissionMiddleware(UPDATE_USER),
   updateUserHandler
 );
 userRouter.post(
   '/',
   jwtMiddleware,
   userMiddleware,
-  hasPermission(ADD_USER),
+  permissionMiddleware(ADD_USER),
   createUserHandler
 );
 
